@@ -163,4 +163,4 @@ public class HockeyPlayer{
 	public Supplier<String> assignTeam = () -> {
 		return "WSH";
 	};
-}
+} 
