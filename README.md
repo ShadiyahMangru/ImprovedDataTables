@@ -180,3 +180,16 @@ Since streams can be used only once, the stream is no longer valid after a termi
 ** Denotes search methods of the Stream API.
 
 NOTE: You can perform a terminal operation without any intermediate operations but not the other way around.
+
+<br>
+
+## JAVA SE 8 COMPARATOR SUMMARY
+
+#### Comparator class (in java.util package) used to: 
+ - specify a different sort order than the object itself provides
+ - to sort an object that did not implement Comparable
+ - to sort objects in different ways at different times
+
+#### A Comparator must implement compare() method
+ - **Comparator class contains the abstract method compare(T o1, T o2) that compares its two arguments for order and returns an int.**
+
