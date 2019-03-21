@@ -41,10 +41,23 @@ public class DataTable{
 		int pipeIndexLN = ln.indexOf("|");
 		String position = sepVals[2].trim();
 		int pipeIndexP = position.indexOf("|");
-		HockeyPlayer hp = new HockeyPlayer(ln.substring(0, pipeIndexLN), position.substring(0, pipeIndexP), Integer.parseInt(sepVals[3].trim()), "WSH");
-		return hp;
+		String jersey = sepVals[3].trim();
+		int pipeIndexJ = jersey.indexOf("|");
+		String gp = sepVals[4].trim();
+		int pipeIndexGP = gp.indexOf("|");
+		String savesGoals = sepVals[5].trim();
+		int pipeIndexSG = savesGoals.indexOf("|");
+		String shotsAgAssists = sepVals[6].trim();
+		int pipeIndexSAA = shotsAgAssists.indexOf("|");
+		HockeyPlayer hp = new HockeyPlayer(ln.substring(0, pipeIndexLN), position.substring(0, pipeIndexP), Integer.parseInt(jersey.substring(0, pipeIndexJ).trim()), "WSH");
+		if(hp.getPosition().contains("Goalie")){
+			return new Goalie(hp, Integer.parseInt(gp.substring(0, pipeIndexGP).trim()), Integer.parseInt(savesGoals.substring(0, pipeIndexSG).trim()), Integer.parseInt(shotsAgAssists.substring(0, pipeIndexSAA).trim()), Integer.parseInt(sepVals[7].trim()));
+		}
+		else{
+			return new Skater(hp, Integer.parseInt(gp.substring(0, pipeIndexGP).trim()), Integer.parseInt(savesGoals.substring(0, pipeIndexSG).trim()), Integer.parseInt(shotsAgAssists.substring(0, pipeIndexSAA).trim()), Integer.parseInt(sepVals[7].trim()));
+		}
 	};
-	
+
 	public Function<Comparator<HockeyPlayer>, String> setSortType = inputComparator -> {
 		if(inputComparator == SortOptions.sortByName){
 			return "Last Name";		
@@ -58,11 +71,22 @@ public class DataTable{
 		return "Arbitrary";
 	};
 	
+	Supplier<String> dataTableHeaderG  = ()-> String.format("| %-4s | %-15s | %-4s | %-11s | %-7s | %-9s | %-9s | %-9s | %-15s |", "TEAM", "PLAYER", "#", "POSITION", "GP", "WINS", "SHOTS AG", "SAVES", "SAVE %") +
+		"\n----------------------------------------------------------------------------------------------------------------";
+		
+	Supplier<String> dataTableHeaderS  = ()-> String.format("| %-4s | %-15s | %-4s | %-11s | %-7s | %-9s | %-9s | %-9s | %-15s |", "TEAM", "PLAYER", "#", "POSITION", "GP", "GOALS", "ASSISTS", "POINTS", "SHOOTING %") +
+		"\n----------------------------------------------------------------------------------------------------------------";			
+	
 	public void getDataTable(){
 		String sortByType = setSortType.apply(sortBy);
 		System.out.println("*** Filter Selection: " + matchCategory + " ***");	
 		System.out.println("*** Results Sorted By: " + sortByType + " ***\n");
-		System.out.println(dataTableHeader.get());
+		if(matchCategory.contains("Goalie")){
+			System.out.println(dataTableHeaderG.get());
+		}
+		else{
+			System.out.println(dataTableHeaderS.get());
+		}
 		try{
 			long matches = 
 			Files.lines(file) //returns the lines from the input file as a Stream (reads in data line-by-line)
@@ -78,7 +102,4 @@ public class DataTable{
 			System.out.println("Exception: " + e);
 		}
 	}
-
-	Supplier<String> dataTableHeader  = ()-> String.format("| %-4s | %-15s | %-4s | %-11s |", "TEAM", "PLAYER", "#", "POSITION") +
-		"\n-----------------------------------------------";
-}			
+}
