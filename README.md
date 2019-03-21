@@ -101,39 +101,7 @@ Files.lines(file) //returns the lines from the input file as a Stream (reads in 
 .peek(hp -> System.out.println(hp))
 .count();
 ```
-In this stream, the sorted() method (re)orders the current elements in the stream according to the definition of *sortBy* (a parameter, of type Comparator<HockeyPlayer>, of the larger method that contains this stream).  In this application, *sortBy* currently assumes one of three forms: *sortByName*, *sortByJersey*, *sortByPThenN*.
-
-Each of these Comparators uses the @Override annotation to signal to the compiler that the ensuing method is an intended override of the Comparator Interface.  In *sortByName*, the compareTo() method compares the String that is each HockeyPlayer object parameter’s lastName, and returns a positive, negative or zero number to determine alphabetic ordering.
-```
-public Comparator<HockeyPlayer> sortByName = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		return h1.getLastName().compareTo(h2.getLastName());
-	}
-};
-```
-In *sortByJersey*, subtraction compares the int that is each HockeyPlayer object parameter’s jersey number, and returns a positive, negative or zero number to determine numeric ordering.
-```
-public Comparator<HockeyPlayer> sortByJersey = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		return h2.getJersey() - h1.getJersey();	
-	}
-};
-```
-In *sortByPThenN*, if the first compareTo() method returns a zero to signify that both HockeyPlayer object parameters have the same position, another compareTo() method is called to compare each HockeyPlayer object parameter's last name.  This Comparator sorts the current stream elements first by position, and then subsorts players with the same position from A-Z by last name.  
-```
-public Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		if(h2.getPosition().compareTo(h1.getPosition()) != 0){
-			return h2.getPosition().compareTo(h1.getPosition());	
-		}
-		return h1.getLastName().compareTo(h2.getLastName());		
-	}
-};
-```
-The current elements in the stream are reordered depending on which Comparator<HockeyPlayer> the Stream sorted() method relies on (*sortByName*, *sortByJersey*, or *sortByPThenN* in this example).
+In this stream, the sorted() method (re)orders the current elements in the stream according to the definition of *sortBy* (a parameter, of type Comparator<HockeyPlayer>, of the larger method that contains this stream).  In this application, *sortBy* currently assumes one of three forms: *sortByName*, *sortByJersey*, *sortByPThenN*.  The current elements in the stream are reordered depending on which Comparator<HockeyPlayer> the Stream sorted() method relies on (*sortByName*, *sortByJersey*, or *sortByPThenN* in this example).
 
 - The **peek()** method is useful for debugging because it allows one to perform a stream operation without actually changing the stream.  The most common use for peek() is to output the contents of the stream as it goes by.  
 - The **distinct()** method returns a stream with duplicate values removed. 
@@ -193,3 +161,35 @@ NOTE: You can perform a terminal operation without any intermediate operations b
 #### A Comparator must implement compare() method
  - **Comparator class contains the abstract method compare(T o1, T o2) that compares its two arguments for order and returns an int.**
 
+Each of this application's Comparators uses the @Override annotation to signal to the compiler that the ensuing method is an intended override of the Comparator Interface.  
+
+In *sortByName*, the compareTo() method compares the String that is each HockeyPlayer object parameter’s lastName, and returns a positive, negative or zero number to determine alphabetic ordering.
+```
+public Comparator<HockeyPlayer> sortByName = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		return h1.getLastName().compareTo(h2.getLastName());
+	}
+};
+```
+In *sortByJersey*, subtraction compares the int that is each HockeyPlayer object parameter’s jersey number, and returns a positive, negative or zero number to determine numeric ordering.
+```
+public Comparator<HockeyPlayer> sortByJersey = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		return h2.getJersey() - h1.getJersey();	
+	}
+};
+```
+In *sortByPThenN*, if the first compareTo() method returns a zero to signify that both HockeyPlayer object parameters have the same position, another compareTo() method is called to compare each HockeyPlayer object parameter's last name.  This Comparator sorts the current stream elements first by position, and then subsorts players with the same position from A-Z by last name.  
+```
+public Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		if(h2.getPosition().compareTo(h1.getPosition()) != 0){
+			return h2.getPosition().compareTo(h1.getPosition());	
+		}
+		return h1.getLastName().compareTo(h2.getLastName());		
+	}
+};
+```
