@@ -21,8 +21,12 @@ public class Main{
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "     View the Current Roster:", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "      8.) All Players", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "     Stats Leaders by Position:", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      9.) Goals Leaders (C/RW/LW/D)", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      10.) Points Leaders (C/RW/LW/D)", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      9.) Exit", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      11.) Exit", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
 		System.out.println("\t**********************************************************");
 		Console console = System.console();
@@ -31,9 +35,19 @@ public class Main{
 			userInput = console.readLine();
 			//console.writer().println("Your selection: " + userInput);
 		}
-		if(userInput.equals("9")){
+		if(userInput.equals("11")){
 			System.out.println("You selected: EXIT");
 			System.exit(0);
+		}
+		else if(userInput.equals("10")){
+			System.out.println("You selected: DISPLAY POINTS LEADERS BY POSITION\n");
+			DataTable dt = new DataTable(SortOptions.sortByName, "Goalies", "Goalie");
+			dt.getTopStats(SortOptions.sortByPoints);
+		}
+		else if(userInput.equals("9")){
+			System.out.println("You selected: DISPLAY GOALS LEADERS BY POSITION\n");
+			DataTable dt = new DataTable(SortOptions.sortByName, "Goalies", "Goalie");
+			dt.getTopStats(SortOptions.sortByGoals);
 		}
 		else if(userInput.equals("8")){
 			System.out.println("You selected: DISPLAY ROSTER");
