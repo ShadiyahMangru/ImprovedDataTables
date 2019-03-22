@@ -1,7 +1,7 @@
 import java.nio.file.*;
 import java.io.*;
 import java.util.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
 import java.util.function.*;
 
 public class DataTable{
@@ -58,6 +58,13 @@ public class DataTable{
 		}
 	};
 
+	public Function<String, String> getName = inputString -> {
+		int colonIndex = inputString.indexOf(":");
+		int pipeIndex = inputString.indexOf("|");
+		return inputString.substring(colonIndex+1, pipeIndex).trim();
+		
+	};
+	
 	public Function<Comparator<HockeyPlayer>, String> setSortType = inputComparator -> {
 		if(inputComparator == SortOptions.sortByName){
 			return "Last Name";		
@@ -100,6 +107,24 @@ public class DataTable{
 		}
 		catch(Exception e){
 			System.out.println("Exception: " + e);
+		}
+	}
+	
+	public void getRoster(){
+		try{
+			List roster = new ArrayList<>();
+			roster = 
+			Files.lines(file)
+			.filter(s -> s.startsWith("Pl"))
+			.map(s -> getName.apply(s))
+			.sorted()
+			.collect(Collectors.toList());
+			for(int i=0; i<roster.size(); i++){
+				System.out.println("\t" + (i+1) + ".) " + roster.get(i));	
+			}
+		}
+		catch (IOException ioe){
+			System.out.println("Exception: " + ioe);	
 		}
 	}
 }
