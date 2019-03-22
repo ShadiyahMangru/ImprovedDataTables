@@ -15,6 +15,20 @@ interface SortOptions{
 		}
 	};
 	
+	public static Comparator<HockeyPlayer> sortByGoals = new Comparator<HockeyPlayer>() {
+		@Override
+		public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+			return ((Skater)h2).getGoals() - ((Skater)h1).getGoals();	
+		}
+	};
+	
+	public static Comparator<HockeyPlayer> sortByPoints = new Comparator<HockeyPlayer>() {
+		@Override
+		public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+			return ((Skater)h2).getPoints() - ((Skater)h1).getPoints();	
+		}
+	};
+	
 	public static Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
 		@Override
 		public int compare(HockeyPlayer h1, HockeyPlayer h2) {
