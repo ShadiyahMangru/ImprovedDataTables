@@ -6,6 +6,7 @@ import java.util.function.*;
 
 public class DataTable{
 	//fields
+	private List<HockeyPlayer> roster;
 	private String matchCategory;
 	private String[] matchThis;
 	private Comparator<HockeyPlayer> sortBy;
@@ -16,6 +17,7 @@ public class DataTable{
 		this.sortBy = sortBy;
 		this.matchCategory = matchCategory;
 		this.matchThis = matchThis;
+		setRoster();
 	}
 	
 	public BiPredicate<String, String[]> keepMatches = (input, matchThisArray) -> {
@@ -110,21 +112,48 @@ public class DataTable{
 		}
 	}
 	
-	public void getRoster(){
+	public void getStatsLeads(Comparator<HockeyPlayer> sortBy, String... positionType){
 		try{
-			List roster = new ArrayList<>();
+			Optional<HockeyPlayer> statsLead = 
+			roster.stream()
+			.filter(input ->keepMatches.test(((HockeyPlayer)input).getPosition(), positionType))
+			.min(sortBy);
+			System.out.println(statsLead.get());
+			
+		}
+		catch(Exception e){
+			System.out.println("Exception: " + e);
+		}
+		
+	}
+	
+	public void getTopStats(Comparator<HockeyPlayer> sortBy){
+		System.out.println(dataTableHeaderS.get());
+		getStatsLeads(sortBy, "Center");
+		getStatsLeads(sortBy, "Right Wing");
+		getStatsLeads(sortBy, "Left Wing");
+		getStatsLeads(sortBy, "Defense");
+	}
+	
+	public void setRoster(){
+		try{
+			roster = new ArrayList<HockeyPlayer>();
 			roster = 
 			Files.lines(file)
 			.filter(s -> s.startsWith("Pl"))
-			.map(s -> getName.apply(s))
-			.sorted()
+			.map(s -> initHP.apply(s))
+			.sorted(SortOptions.sortByName)
 			.collect(Collectors.toList());
-			for(int i=0; i<roster.size(); i++){
-				System.out.println("\t" + (i+1) + ".) " + roster.get(i));	
-			}
 		}
 		catch (IOException ioe){
 			System.out.println("Exception: " + ioe);	
 		}
 	}
+	
+	public void getRoster(){
+		for(int i=0; i<roster.size(); i++){
+			System.out.println("\t" + (i+1) + ".) " + ((HockeyPlayer)roster.get(i)).getLastName());	
+		}
+	}
+	
 }
