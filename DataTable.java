@@ -7,16 +7,10 @@ import java.util.function.*;
 public class DataTable{
 	//fields
 	private List<HockeyPlayer> roster;
-	private String matchCategory;
-	private String[] matchThis;
-	private Comparator<HockeyPlayer> sortBy;
 	private final Path file = new File("C:\\Users\\593476\\Desktop\\Java Programs\\HockeyDataTable\\2019WSHStatsREV.txt").toPath();	//data input file location
 	
 	//constructor
-	public DataTable(Comparator<HockeyPlayer> sortBy, String matchCategory, String... matchThis){
-		this.sortBy = sortBy;
-		this.matchCategory = matchCategory;
-		this.matchThis = matchThis;
+	public DataTable(){
 		setRoster();
 	}
 	
@@ -77,6 +71,18 @@ public class DataTable{
 		else if(inputComparator == SortOptions.sortByPThenN){
 			return "Position Then Last Name";	
 		}
+		else if(inputComparator == SortOptions.sortByGoals){
+			return "Goals";	
+		}
+		else if(inputComparator == SortOptions.sortByPoints){
+			return "Points";	
+		}
+		else if(inputComparator == SortOptions.sortByAssists){
+			return "Assists";	
+		}
+		else if(inputComparator == SortOptions.sortByShootingPercentThenName){
+			return "Shooting Percent Then Name";	
+		}
 		return "Arbitrary";
 	};
 	
@@ -86,7 +92,7 @@ public class DataTable{
 	Supplier<String> dataTableHeaderS  = ()-> String.format("| %-4s | %-15s | %-4s | %-11s | %-7s | %-9s | %-9s | %-9s | %-15s |", "TEAM", "PLAYER", "#", "POSITION", "GP", "GOALS", "ASSISTS", "POINTS", "SHOOTING %") +
 		"\n----------------------------------------------------------------------------------------------------------------";			
 	
-	public void getDataTable(){
+	public void getStatsByPosition(Comparator<HockeyPlayer> sortBy, String matchCategory, String... matchThis){
 		String sortByType = setSortType.apply(sortBy);
 		System.out.println("*** Filter Selection: " + matchCategory + " ***");	
 		System.out.println("*** Results Sorted By: " + sortByType + " ***\n");
@@ -98,9 +104,8 @@ public class DataTable{
 		}
 		try{
 			long matches = 
-			Files.lines(file) //returns the lines from the input file as a Stream (reads in data line-by-line)
-			.filter(inputString -> keepMatches.test(inputString, matchThis))
-			.map(match -> initHP.apply(match))
+			roster.stream() //returns the lines from the input file as a Stream (reads in data line-by-line)
+			.filter(inputString -> keepMatches.test(((HockeyPlayer)inputString).getPosition(), matchThis))
 			.sorted(sortBy)
 			.peek(hp -> System.out.println(hp))
 			.count();
@@ -124,7 +129,6 @@ public class DataTable{
 		catch(Exception e){
 			System.out.println("Exception: " + e);
 		}
-		
 	}
 	
 	public void getTopStats(Comparator<HockeyPlayer> sortBy){
