@@ -29,6 +29,28 @@ interface SortOptions{
 		}
 	};
 	
+	public static Comparator<HockeyPlayer> sortByAssists = new Comparator<HockeyPlayer>() {
+		@Override
+		public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+			return ((Skater)h2).getAssists() - ((Skater)h1).getAssists();	
+		}
+	};
+	
+	public static Comparator<HockeyPlayer> sortByShootingPercentThenName = new Comparator<HockeyPlayer>() {
+		@Override
+		public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+			if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() > 0) {
+				return 1;	
+			}
+			else if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() < 0) {
+				return -1;	
+			}
+			else{
+				return h1.getLastName().compareTo(h2.getLastName());	
+			}
+		}
+	};
+	
 	public static Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
 		@Override
 		public int compare(HockeyPlayer h1, HockeyPlayer h2) {
