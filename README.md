@@ -193,3 +193,21 @@ public Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
 	}
 };
 ```
+
+In *sortByShootingPercentThenName*, each HockeyPlayer object parameter is cast to a Skater object to perform shooting percentages comparisons.  When the difference is positive/negative, a 1/-1 is returned to satisfy int return value requirements of the compare(T o1, T o2) method override.  The else statement implicitly handles the equality case of the two HockeyPlayer-cast-to-Skater object parameters' shooting percentages; in this case, the same logic as the *sortByName* comparator determines ordering alphabetically.  No narrowing cast is required for this comparison by last name, because last name is a HockeyPlayer object instance variable.
+```
+public static Comparator<HockeyPlayer> sortByShootingPercentThenName = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() > 0) {
+			return 1;	
+		}
+		else if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() < 0) {
+			return -1;	
+		}
+		else{
+			return h1.getLastName().compareTo(h2.getLastName());	
+		}
+	}
+};
+```
