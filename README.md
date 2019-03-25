@@ -107,7 +107,7 @@ else{
   - Return type R
   - apply()
   
-In the *DataTable* class of this application, the *setSortType* Function accepts a Comparator of HockeyPlayer objects, and returns a String describing the current basis for HockeyPlayer object ordering.
+In the *DataTable* class of this application, the *setSortType* **Function** accepts a Comparator of HockeyPlayer objects, and returns a String describing the current basis for HockeyPlayer object ordering.
 
 ```
 public Function<Comparator<HockeyPlayer>, String> setSortType = inputComparator -> {
@@ -160,6 +160,33 @@ Each *getStatsByPosition()* method call provides a new opportunity to change the
   - 1 parameter T
   - Return type T
   - apply()
+
+In the *DataTable* class of this application, the *getInfo* **UnaryOperator** accepts an input String of hockey player data, and returns a String with excess formatting/delimiters/spaces removed.
+```
+public UnaryOperator<String> getInfo = inputString -> {
+	int pipeIndex = inputString.indexOf("|");
+	return inputString.substring(0, pipeIndex).trim();
+};
+```
+In the *initHP* Function of the *DataTable* class, the *getInfo* UnaryOperator appears in each new HockeyPlayer/Goalie/Skater object initialization (see the third, the sixth, and the eighth line from the bottom).  In each instance, the *getInfo* UnaryOperator accepts a String of hockey player data from the roster input file, and isolates the information necessary to initialize HockeyPlayer/Goalie/Skater objects that correspond to the input file data. 
+```
+public Function<String, HockeyPlayer> initHP = inputString -> {
+	String[] sepVals = inputString.split(":");
+	String ln = sepVals[1].trim();
+	String position = sepVals[2].trim();
+	String jersey = sepVals[3].trim();
+	String gp = sepVals[4].trim();
+	String savesGoals = sepVals[5].trim();
+	String shotsAgAssists = sepVals[6].trim();
+	HockeyPlayer hp = new HockeyPlayer(getInfo.apply(ln), getInfo.apply(position), Integer.parseInt(getInfo.apply(jersey)), "WSH");
+	if(hp.getPosition().contains("Goalie")){
+		return new Goalie(hp, Integer.parseInt(getInfo.apply(gp)), Integer.parseInt(getInfo.apply(savesGoals)), Integer.parseInt(getInfo.apply(shotsAgAssists)), Integer.parseInt(sepVals[7].trim()));
+	}
+	else{
+		return new Skater(hp, Integer.parseInt(getInfo.apply(gp)), Integer.parseInt(getInfo.apply(savesGoals)), Integer.parseInt(getInfo.apply(shotsAgAssists)), Integer.parseInt(sepVals[7].trim()));
+	}
+};
+```
 
 <br>
 
