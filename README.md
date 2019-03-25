@@ -72,7 +72,28 @@ A **functional interface** has exactly one abstract method.
 - **Supplier**: generates or supplies values without taking any input
   - No parameters
   - Return type T 
-  - get()                                                                    
+  - get()   
+  
+In the *DataTable* class of this application, the *dataTableHeaderG* / *dataTableHeaderS* **Supplier** accepts no input and returns a (formatted) String with the Data Table headers customized for a Goalie / Skater (read: Center/Right-Wing/Left-Wing/Defense) object.
+
+```
+Supplier<String> dataTableHeaderG  = ()-> String.format("| %-4s | %-15s | %-4s | %-11s | %-7s | %-9s | %-9s | %-9s | %-15s |", "TEAM", "PLAYER", "#", "POSITION", "GP", "WINS", "SHOTS AG", "SAVES", "SAVE %") +
+	"\n----------------------------------------------------------------------------------------------------------------";
+		
+Supplier<String> dataTableHeaderS  = ()-> String.format("| %-4s | %-15s | %-4s | %-11s | %-7s | %-9s | %-9s | %-9s | %-15s |", "TEAM", "PLAYER", "#", "POSITION", "GP", "GOALS", "ASSISTS", "POINTS", "SHOOTING %") +
+	"\n----------------------------------------------------------------------------------------------------------------";				
+```
+
+In the *getStatsByPosition()* method of the *DataTable* class, the *dataTableHeaderG* / *dataTableHeaderS* Supplier provides the Data Table headers depending on whether the control-flow if-else statement branches for a Goalie object, or for a Skater object.
+```
+if(matchCategory.contains("Goalie")){
+	System.out.println(dataTableHeaderG.get());
+}
+else{
+	System.out.println(dataTableHeaderS.get());
+}
+```
+  
 - **Consumer**: acts upon a parameter but does not return anything 
   - 1 parameter T
   - Return type void
