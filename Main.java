@@ -24,9 +24,10 @@ public class Main{
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "     View Stats Leaders by Position:", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "      9.) Goals Leaders (C/RW/LW/D)", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "      10.) Points Leaders (C/RW/LW/D)", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      11.) Shooting % Leaders (C/RW/LW/D)", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", " ", "*"));
-		System.out.println(String.format("%1s %-53s %2s", "\t*", "      11.) Exit", "*"));
+		System.out.println(String.format("%1s %-53s %2s", "\t*", "      12.) Exit", "*"));
 		System.out.println(String.format("%1s %-53s %2s", "\t*", "", "*"));
 		System.out.println("\t**********************************************************");
 		Console console = System.console();
@@ -36,9 +37,13 @@ public class Main{
 			userInput = console.readLine();
 			//console.writer().println("Your selection: " + userInput);
 		}
-		if(userInput.equals("11")){
+		if(userInput.equals("12")){
 			System.out.println("You selected: EXIT");
 			System.exit(0);
+		}
+		else if(userInput.equals("11")){
+			System.out.println("You selected: DISPLAY SHOOTING % LEADERS BY POSITION\n");
+			dt.getTopStats(SortOptions.sortByShootingPercentThenName);
 		}
 		else if(userInput.equals("10")){
 			System.out.println("You selected: DISPLAY POINTS LEADERS BY POSITION\n");
