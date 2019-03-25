@@ -1,5 +1,68 @@
 # ImprovedDataTables -- Efficient Data Sorting and Filtering
 
+## JAVA SE 8 COMPARATOR SUMMARY
+
+#### Comparator class (in java.util package) used to: 
+ - specify a different sort order than the object itself provides
+ - to sort an object that did not implement Comparable
+ - to sort objects in different ways at different times
+
+#### A Comparator must implement compare() method
+ - **Comparator class contains the abstract method compare(T o1, T o2) that compares its two arguments for order and returns an int.**
+
+Each of this application's Comparators uses the @Override annotation to signal to the compiler that the ensuing method is an intended override of the Comparator Interface.  
+
+In *sortByName*, the compareTo() method compares the String that is each HockeyPlayer object parameter’s lastName, and returns a positive, negative or zero number to determine alphabetic ordering.
+```
+public Comparator<HockeyPlayer> sortByName = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		return h1.getLastName().compareTo(h2.getLastName());
+	}
+};
+```
+In *sortByJersey*, subtraction compares the int that is each HockeyPlayer object parameter’s jersey number, and returns a positive, negative or zero number to determine numeric ordering.
+```
+public Comparator<HockeyPlayer> sortByJersey = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		return h2.getJersey() - h1.getJersey();	
+	}
+};
+```
+In *sortByPThenN*, if the first compareTo() method returns a zero to signify that both HockeyPlayer object parameters have the same position, another compareTo() method is called to compare each HockeyPlayer object parameter's last name.  This Comparator sorts the current stream elements first by position, and then subsorts players with the same position from A-Z by last name.  
+```
+public Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		if(h2.getPosition().compareTo(h1.getPosition()) != 0){
+			return h2.getPosition().compareTo(h1.getPosition());	
+		}
+		return h1.getLastName().compareTo(h2.getLastName());		
+	}
+};
+```
+
+In *sortByShootingPercentThenName*, each HockeyPlayer object parameter is cast to a Skater object to perform shooting percentages comparisons.  When the difference is positive/negative, a 1/-1 is returned to satisfy int return value requirements of the compare(T o1, T o2) method override.  The else statement implicitly handles the equality case of the two HockeyPlayer-cast-to-Skater object parameters' shooting percentages; in this case, the same logic as the *sortByName* comparator determines ordering alphabetically.  No narrowing cast is required for this comparison by last name, because *lastName* is a HockeyPlayer object instance variable.
+```
+public static Comparator<HockeyPlayer> sortByShootingPercentThenName = new Comparator<HockeyPlayer>() {
+	@Override
+	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
+		if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() > 0) {
+			return 1;	
+		}
+		else if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() < 0) {
+			return -1;	
+		}
+		else{
+			return h1.getLastName().compareTo(h2.getLastName());	
+		}
+	}
+};
+```
+
+<br>
+
 ## JAVA’S BUILT-IN FUNCTIONAL INTERFACES SUMMARY
 
 A **functional interface** has exactly one abstract method.
@@ -148,66 +211,3 @@ Since streams can be used only once, the stream is no longer valid after a termi
 ** Denotes search methods of the Stream API.
 
 NOTE: You can perform a terminal operation without any intermediate operations but not the other way around.
-
-<br>
-
-## JAVA SE 8 COMPARATOR SUMMARY
-
-#### Comparator class (in java.util package) used to: 
- - specify a different sort order than the object itself provides
- - to sort an object that did not implement Comparable
- - to sort objects in different ways at different times
-
-#### A Comparator must implement compare() method
- - **Comparator class contains the abstract method compare(T o1, T o2) that compares its two arguments for order and returns an int.**
-
-Each of this application's Comparators uses the @Override annotation to signal to the compiler that the ensuing method is an intended override of the Comparator Interface.  
-
-In *sortByName*, the compareTo() method compares the String that is each HockeyPlayer object parameter’s lastName, and returns a positive, negative or zero number to determine alphabetic ordering.
-```
-public Comparator<HockeyPlayer> sortByName = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		return h1.getLastName().compareTo(h2.getLastName());
-	}
-};
-```
-In *sortByJersey*, subtraction compares the int that is each HockeyPlayer object parameter’s jersey number, and returns a positive, negative or zero number to determine numeric ordering.
-```
-public Comparator<HockeyPlayer> sortByJersey = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		return h2.getJersey() - h1.getJersey();	
-	}
-};
-```
-In *sortByPThenN*, if the first compareTo() method returns a zero to signify that both HockeyPlayer object parameters have the same position, another compareTo() method is called to compare each HockeyPlayer object parameter's last name.  This Comparator sorts the current stream elements first by position, and then subsorts players with the same position from A-Z by last name.  
-```
-public Comparator<HockeyPlayer> sortByPThenN = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		if(h2.getPosition().compareTo(h1.getPosition()) != 0){
-			return h2.getPosition().compareTo(h1.getPosition());	
-		}
-		return h1.getLastName().compareTo(h2.getLastName());		
-	}
-};
-```
-
-In *sortByShootingPercentThenName*, each HockeyPlayer object parameter is cast to a Skater object to perform shooting percentages comparisons.  When the difference is positive/negative, a 1/-1 is returned to satisfy int return value requirements of the compare(T o1, T o2) method override.  The else statement implicitly handles the equality case of the two HockeyPlayer-cast-to-Skater object parameters' shooting percentages; in this case, the same logic as the *sortByName* comparator determines ordering alphabetically.  No narrowing cast is required for this comparison by last name, because last name is a HockeyPlayer object instance variable.
-```
-public static Comparator<HockeyPlayer> sortByShootingPercentThenName = new Comparator<HockeyPlayer>() {
-	@Override
-	public int compare(HockeyPlayer h1, HockeyPlayer h2) {
-		if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() > 0) {
-			return 1;	
-		}
-		else if(((Skater)h2).getShootingPercent() - ((Skater)h1).getShootingPercent() < 0) {
-			return -1;	
-		}
-		else{
-			return h1.getLastName().compareTo(h2.getLastName());	
-		}
-	}
-};
-```
