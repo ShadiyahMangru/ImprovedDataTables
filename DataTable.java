@@ -31,34 +31,26 @@ public class DataTable{
 		return false;
 	};
 	
+	public UnaryOperator<String> getInfo = inputString -> {
+		int pipeIndex = inputString.indexOf("|");
+		return inputString.substring(0, pipeIndex).trim();
+	};
+	
 	public Function<String, HockeyPlayer> initHP = inputString -> {
 		String[] sepVals = inputString.split(":");
 		String ln = sepVals[1].trim();
-		int pipeIndexLN = ln.indexOf("|");
 		String position = sepVals[2].trim();
-		int pipeIndexP = position.indexOf("|");
 		String jersey = sepVals[3].trim();
-		int pipeIndexJ = jersey.indexOf("|");
 		String gp = sepVals[4].trim();
-		int pipeIndexGP = gp.indexOf("|");
 		String savesGoals = sepVals[5].trim();
-		int pipeIndexSG = savesGoals.indexOf("|");
 		String shotsAgAssists = sepVals[6].trim();
-		int pipeIndexSAA = shotsAgAssists.indexOf("|");
-		HockeyPlayer hp = new HockeyPlayer(ln.substring(0, pipeIndexLN), position.substring(0, pipeIndexP), Integer.parseInt(jersey.substring(0, pipeIndexJ).trim()), "WSH");
+		HockeyPlayer hp = new HockeyPlayer(getInfo.apply(ln), getInfo.apply(position), Integer.parseInt(getInfo.apply(jersey)), "WSH");
 		if(hp.getPosition().contains("Goalie")){
-			return new Goalie(hp, Integer.parseInt(gp.substring(0, pipeIndexGP).trim()), Integer.parseInt(savesGoals.substring(0, pipeIndexSG).trim()), Integer.parseInt(shotsAgAssists.substring(0, pipeIndexSAA).trim()), Integer.parseInt(sepVals[7].trim()));
+			return new Goalie(hp, Integer.parseInt(getInfo.apply(gp)), Integer.parseInt(getInfo.apply(savesGoals)), Integer.parseInt(getInfo.apply(shotsAgAssists)), Integer.parseInt(sepVals[7].trim()));
 		}
 		else{
-			return new Skater(hp, Integer.parseInt(gp.substring(0, pipeIndexGP).trim()), Integer.parseInt(savesGoals.substring(0, pipeIndexSG).trim()), Integer.parseInt(shotsAgAssists.substring(0, pipeIndexSAA).trim()), Integer.parseInt(sepVals[7].trim()));
+			return new Skater(hp, Integer.parseInt(getInfo.apply(gp)), Integer.parseInt(getInfo.apply(savesGoals)), Integer.parseInt(getInfo.apply(shotsAgAssists)), Integer.parseInt(sepVals[7].trim()));
 		}
-	};
-
-	public Function<String, String> getName = inputString -> {
-		int colonIndex = inputString.indexOf(":");
-		int pipeIndex = inputString.indexOf("|");
-		return inputString.substring(colonIndex+1, pipeIndex).trim();
-		
 	};
 	
 	public Function<Comparator<HockeyPlayer>, String> setSortType = inputComparator -> {
