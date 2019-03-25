@@ -106,6 +106,56 @@ else{
   - 1 parameter T
   - Return type R
   - apply()
+  
+In the *DataTable* class of this application, the *setSortType* Function accepts a Comparator of HockeyPlayer objects, and returns a String describing the current basis for HockeyPlayer object ordering.
+
+```
+public Function<Comparator<HockeyPlayer>, String> setSortType = inputComparator -> {
+	if(inputComparator == SortOptions.sortByName){
+		return "Last Name";		
+	}
+	else if(inputComparator == SortOptions.sortByJersey){
+		return "Jersey Number";
+	}
+	else if(inputComparator == SortOptions.sortByPThenN){
+		return "Position Then Last Name";	
+	}
+	else if(inputComparator == SortOptions.sortByGoals){
+		return "Goals";	
+	}
+	else if(inputComparator == SortOptions.sortByPoints){
+		return "Points";	
+	}
+	else if(inputComparator == SortOptions.sortByAssists){
+		return "Assists";	
+	}
+	else if(inputComparator == SortOptions.sortByShootingPercentThenName){
+		return "Shooting Percent Then Name";	
+	}
+	return "Arbitrary";
+};
+```
+
+In the *getStatsByPosition()* method of the *DataTable* class, the *setSortType* Function accepts the *sortBy* Comparator parameter of the *getStatsByPosition()* method, then dynamically provides the value for the *sortByType* String local variable of this method (see line 2 of the code below).  In the fourth line from the top, a print statement outputs this description to the screen.  
+```
+public void getStatsByPosition(Comparator<HockeyPlayer> sortBy, String matchCategory, String... matchThis){
+	String sortByType = setSortType.apply(sortBy);
+	System.out.println("*** Filter Selection: " + matchCategory + " ***");	
+	System.out.println("*** Results Sorted By: " + sortByType + " ***\n");
+	if(matchCategory.contains("Goalie")){
+		System.out.println(dataTableHeaderG.get());
+	}
+	else{
+		System.out.println(dataTableHeaderS.get());
+	}
+	
+	... 
+
+}
+```
+Each *getStatsByPosition()* method call provides a new opportunity to change the criteria by which the Data Table’s HockeyPlayer objects are sorted.
+
+  
 - **UnaryOperator**: transforms its value into one of the same type
   - 1 parameter T
   - Return type T
